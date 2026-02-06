@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Todo List</title>
+<style>
+  /* GENERAL STYLING */
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0a1931, #162447);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .container {
+    background: #1b1b2f;
+    padding: 25px 30px;
+    border-radius: 15px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    animation: fadeIn 0.7s ease-in;
+  }
+
+  h2 {
+    margin-bottom: 20px;
+    color: #e43f5a;
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(-20px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  input {
+    width: 80%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    margin: 10px 0;
+    outline: none;
+    font-size: 16px;
+    transition: transform 0.2s, box-shadow 0.3s;
+  }
+
+  input:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 8px #e43f5a;
+  }
+
+  button {
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: #1f4068;
+    color: #fff;
+    font-weight: bold;
+    transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
+  }
+
+  button:hover {
+    background: #e43f5a;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #e43f5a;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+  }
+
+  li {
+    background: #162447;
+    margin: 8px 0;
+    padding: 12px 10px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transform: translateX(-20px);
+    opacity: 0;
+    animation: slideIn 0.4s forwards;
+    transition: background 0.3s;
+  }
+
+  li.completed {
+    background: #0f5132;
+    color: lightgreen;
+    text-decoration: line-through;
+  }
+
+  @keyframes slideIn {
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  li:hover {
+    background: #243447;
+  }
+
+  .actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .actions button {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+
+  .progress-container {
+    background: #0f1b2c;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 15px;
+    height: 14px;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #e43f5a;
+    border-radius: 10px;
+    transition: width 0.5s ease, background 0.5s ease;
+  }
+
+  .message {
+    margin-top: 18px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: transform 0.3s;
+  }
+
+  .message.show {
+    transform: scale(1.05);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2> Todo List App</h2>
+
+  <input type="text" id="taskInput" placeholder="Enter a task">
+  <button onclick="addTask()">Add Task</button>
+
+  <ul id="taskList"></ul>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <button onclick="checkProgress()">Check Progress</button>
+
+  <p class="message" id="message"></p>
+</div>
+
+<script>
+  let tasks = [];
+
+  function addTask() {
+    const input = document.getElementById("taskInput");
+    const text = input.value.trim();
+    if (!text) return;
+
+    tasks.push({ name: text, completed: false });
+    input.value = "";
+    renderTasks();
+  }
+
+  function toggleTask(index) {
+    tasks[index].completed = !tasks[index].completed;
+    renderTasks();
+  }
+
+  function editTask(index) {
+    const newTask = prompt("Edit your task:", tasks[index].name);
+    if (newTask !== null && newTask.trim() !== "") {
+      tasks[index].name = newTask.trim();
+      renderTasks();
+    }
+  }
+
+  function renderTasks() {
+    const list = document.getElementById("taskList");
+    list.innerHTML = "";
+
+    tasks.forEach((task, index) => {
+      const li = document.createElement("li");
+      if(task.completed) li.classList.add("completed");
+
+      li.innerHTML = `
+        <span>${task.name}</span>
+        <div class="actions">
+          <input type="checkbox" onclick="toggleTask(${index})" ${task.completed ? "checked" : ""}>
+          <button onclick="editTask(${index})">Edit</button>
+        </div>
+      `;
+      list.appendChild(li);
+    });
+
+    updateProgressBar();
+  }
+
+  function updateProgressBar() {
+    const completed = tasks.filter(t => t.completed).length;
+    const total = tasks.length;
+    const percent = total === 0 ? 0 : (completed / total) * 100;
+    const bar = document.getElementById("progressBar");
+
+    bar.style.width = percent + "%";
+    if(percent === 100) bar.style.background = "lightgreen";
+    else bar.style.background = "#e43f5a";
+  }
+
+  function checkProgress() {
+    const msg = document.getElementById("message");
+
+    if (tasks.length === 0) {
+      msg.innerText = "Add some tasks first 💡";
+      msg.style.color = "#ffb703";
+      msg.classList.add("show");
+      return;
+    }
+
+    const remaining = tasks.filter(t => !t.completed).length;
+
+    if (remaining === 0) {
+      msg.innerText = "🎉 Well done champ! You completed all your tasks!";
+      msg.style.color = "lightgreen";
+    } else {
+      msg.innerText = `💪 Keep going! ${remaining} task(s) left. You can do it!`;
+      msg.style.color = "#ffb703";
+    }
+
+    msg.classList.add("show");
+    setTimeout(()=> msg.classList.remove("show"), 800);
+  }
+</script>
+
+</body>
+</html>

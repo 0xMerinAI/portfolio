@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz App</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  body {
+    background: linear-gradient(135deg, #0a1931, #162447);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .container {
+    max-width: 600px;
+    background: #1b1b2f;
+    padding: 30px 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    animation: fadeIn 0.7s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {opacity:0; transform: translateY(20px);}
+    to {opacity:1; transform: translateY(0);}
+  }
+
+  h2 {
+    margin-bottom: 20px;
+    color: #e43f5a;
+  }
+
+  .btn-start, .btn-next, .options button {
+    padding: 10px 18px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .btn-start, .btn-next {
+    background: #1f4068;
+    color: #fff;
+  }
+
+  .btn-start:hover, .btn-next:hover {
+    background: #e43f5a;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #e43f5a;
+  }
+
+  .question {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+
+  .options button {
+    width: 100%;
+    background: #243447;
+    color: #fff;
+    margin: 5px 0;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: 0.3s ease;
+  }
+
+  .options button:hover {
+    background: #e43f5a;
+    transform: scale(1.03);
+  }
+
+  .options button.correct {
+    background: lightgreen !important;
+    color: #000;
+  }
+
+  .options button.wrong {
+    background: #ff4c4c !important;
+    color: #000;
+  }
+
+  .score-container {
+    font-size: 18px;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #e43f5a;
+  }
+
+  .fade-out {
+    animation: fadeOut 0.4s forwards;
+  }
+
+  @keyframes fadeOut {
+    from {opacity:1; transform: translateY(0);}
+    to {opacity:0; transform: translateY(-20px);}
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="welcomeContainer">
+  <h2>Are you ready for the Quiz?</h2>
+  <p>Test your knowledge and see how much you score!</p>
+  <button class="btn-start" onclick="startQuiz()">Start Quiz</button>
+</div>
+
+<div class="container" id="quizContainer" style="display:none;">
+  <h2>Quiz App</h2>
+  <div class="question" id="question"></div>
+  <div class="options" id="options"></div>
+  <button class="btn-next" id="nextBtn" style="display:none;">Next Question</button>
+  <div class="score-container" id="scoreContainer" style="display:none;"></div>
+</div>
+
+<script>
+const quizData = [
+  {question: "What does HTML stand for?", options:["Hyper Text Markup Language","High Text Machine Language","Hyperlinks and Text Markup Language","Home Tool Markup Language"], answer: 0},
+  {question: "Which language is used for styling web pages?", options:["HTML","CSS","Python","Java"], answer: 1},
+  {question: "Inside which HTML element do we put JavaScript?", options:["<js>","<javascript>","<script>","<code>"], answer: 2},
+  {question: "Which symbol is used for comments in JavaScript?", options:["//","/* */","#","<!-- -->"], answer: 0},
+  {question: "What does CSS stand for?", options:["Cascading Style Sheets","Creative Style System","Computer Style Sheet","Colorful Style Syntax"], answer: 0}
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+const welcomeContainer = document.getElementById("welcomeContainer");
+const quizContainer = document.getElementById("quizContainer");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("nextBtn");
+const scoreContainer = document.getElementById("scoreContainer");
+
+function startQuiz() {
+  welcomeContainer.classList.add("fade-out");
+  setTimeout(() => {
+    welcomeContainer.style.display = "none";
+    quizContainer.style.display = "block";
+    loadQuestion();
+  }, 400);
+}
+
+function loadQuestion() {
+  const q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+
+  q.options.forEach((option, index) => {
+    const btn = document.createElement("button");
+    btn.textContent = option;
+    btn.onclick = () => selectAnswer(index);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  const q = quizData[currentQuestion];
+  Array.from(optionsEl.children).forEach((btn, index) => {
+    btn.disabled = true;
+    if(index === q.answer) btn.classList.add("correct");
+    else if(index === selected) btn.classList.add("wrong");
+  });
+
+  if(selected === q.answer) score++;
+  nextBtn.style.display = "block";
+}
+
+nextBtn.onclick = () => {
+  currentQuestion++;
+  if(currentQuestion < quizData.length) {
+    loadQuestion();
+  } else {
+    showScore();
+  }
+}
+
+function showScore() {
+  quizContainer.innerHTML = `
+    <h2>Quiz Completed!</h2>
+    <p>Your total score is: ${score} / ${quizData.length}</p>
+    <button class="btn-start" onclick="restartQuiz()">Try Again</button>
+  `;
+}
+
+function restartQuiz() {
+  currentQuestion = 0;
+  score = 0;
+  location.reload(); // simple reload for restart
+}
+</script>
+
+</body>
+</html>
