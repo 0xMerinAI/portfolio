@@ -54,6 +54,29 @@ section h2 { color:#00BFFF; margin-bottom:40px; text-align:center; text-shadow: 
 .project-card { padding:25px; border-radius:15px; animation: float 4s ease-in-out infinite; }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
+/* ---------- PROJECTS HOVER EFFECT ---------- */
+#projects a img {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+#projects a img:hover {
+  transform: scale(1.1) translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 191, 255, 0.6);
+}
+#projects h3 {
+  transition: color 0.3s;
+}
+#projects a:hover h3 {
+  color: #00BFFF;
+}
+
+/* Remove underline from project titles */
+#projects a {
+  text-decoration: none;
+}
+#projects a:hover {
+  text-decoration: none;
+}
+
 /* ---------- CONTACT FORM ---------- */
 #contact { background-color:#0A1624; border-top:1px solid #00BFFF; border-bottom:1px solid #00BFFF; color:#fff; }
 #contact h2 { color:#00BFFF; margin-bottom:30px; }
@@ -189,7 +212,7 @@ section h2 { color:#00BFFF; margin-bottom:40px; text-align:center; text-shadow: 
       <div class="col-md-2 col-4 skill-card">Python</div>
       <div class="col-md-2 col-4 skill-card">MySQL</div>
       <div class="col-md-2 col-4 skill-card">Cybersecurity</div>
-       <div class="col-md-2 col-4 skill-card">React.js</div>
+      <div class="col-md-2 col-4 skill-card">React.js</div>
     </div>
   </div>
 </section>
@@ -199,21 +222,26 @@ section h2 { color:#00BFFF; margin-bottom:40px; text-align:center; text-shadow: 
   <div class="container fade-up">
     <h2>Projects</h2>
     <div class="row g-4 justify-content-center">
-      <div class="col-md-4"><div class="project-card">
-          <h5>Todo List App</h5>
-          <p>A secure task management app with user authentication and encrypted data storage.</p>
-          <p><strong>Technologies:</strong> HTML, CSS, JavaScript, MongoDB</p>
-        </div></div>
-      <div class="col-md-4"><div class="project-card">
-          <h5>Quiz App</h5>
-          <p>A multiple-choice quiz platform with real-time scoring and analytics.</p>
-          <p><strong>Technologies:</strong> HTML, CSS, JavaScript, Bootstrap</p>
-        </div></div>
-      <div class="col-md-4"><div class="project-card">
-          <h5>Secure Calculator</h5>
-          <p>A secure and optimized calculator app with a clean interface.</p>
-          <p><strong>Technologies:</strong> HTML, CSS, JavaScript</p>
-        </div></div>
+      <div class="col-md-4 project-card" style="width:250px; text-align:center;">
+        <a href="projects/smart-to-do-list/index.html" target="_blank">
+          <img src="projects/smart-to-do-list/screenshot.png" alt="Todo List App" style="width:100%; border-radius:12px;">
+          <h3 style="margin-top:10px; color:#fff;">To do List Project</h3>
+        </a>
+      </div>
+
+      <div class="col-md-4 project-card" style="width:250px; text-align:center;">
+        <a href="projects/Quiz-App/index.html" target="_blank">
+          <img src="projects/Quiz-App/screenshot.png" alt="Quiz App" style="width:100%; border-radius:12px;">
+          <h3 style="margin-top:10px; color:#fff;">Quiz App</h3>
+        </a>
+      </div>
+
+      <div class="col-md-4 project-card" style="width:250px; text-align:center;">
+        <a href="projects/Secure-Calculator/index.html" target="_blank">
+          <img src="projects/Secure-Calculator/screenshot.png" alt="Secure Calculator" style="width:100%; border-radius:12px;">
+          <h3 style="margin-top:10px; color:#fff;">Secure Calculator</h3>
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -232,13 +260,13 @@ section h2 { color:#00BFFF; margin-bottom:40px; text-align:center; text-shadow: 
       <div class="col-md-4">
         <div class="edu-card">
           <h5>+2 Study</h5>
-          <p> Shree Pashupati Technical School </p>
+          <p>Shree Pashupati Technical School</p>
         </div>
       </div>
       <div class="col-md-4">
         <div class="edu-card">
           <h5>School</h5>
-          <p>Divya Jyoti Secondary School ( 2078 Batch )</p>
+          <p>Divya Jyoti Secondary School (2078 Batch)</p>
         </div>
       </div>
     </div>
